@@ -158,8 +158,13 @@ func (p *MasterPlaylist) Encode() *bytes.Buffer {
 				p.buf.WriteRune('\n')
 			}
 		}
-		if pl.Iframe {
-			p.buf.WriteString("#EXT-X-I-FRAME-STREAM-INF:PROGRAM-ID=")
+		if pl.Iframe || pl.Image {
+			if pl.Iframe {
+				p.buf.WriteString("#EXT-X-I-FRAME-STREAM-INF:")
+			} else {
+				p.buf.WriteString("#EXT-X-IMAGE-STREAM-INF:")
+			}
+			p.buf.WriteString("PROGRAM-ID=")
 			p.buf.WriteString(strconv.FormatUint(uint64(pl.ProgramId), 10))
 			p.buf.WriteString(",BANDWIDTH=")
 			p.buf.WriteString(strconv.FormatUint(uint64(pl.Bandwidth), 10))

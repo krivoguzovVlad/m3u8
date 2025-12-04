@@ -393,10 +393,11 @@ func decodeLineOfMasterPlaylist(p *MasterPlaylist, state *decodingState, line st
 	case state.tagStreamInf && !strings.HasPrefix(line, "#"):
 		state.tagStreamInf = false
 		state.variant.URI = line
-	case strings.HasPrefix(line, "#EXT-X-I-FRAME-STREAM-INF:"):
+	case strings.HasPrefix(line, "#EXT-X-I-FRAME-STREAM-INF:") || strings.HasPrefix(line, "#EXT-X-IMAGE-STREAM-INF"):
 		state.listType = MASTER
 		state.variant = new(Variant)
-		state.variant.Iframe = true
+		state.variant.Iframe = strings.HasPrefix(line, "#EXT-X-I-FRAME-STREAM-INF:")
+		state.variant.Image = strings.HasPrefix(line, "#EXT-X-IMAGE-STREAM-INF")
 		if len(state.alternatives) > 0 {
 			state.variant.Alternatives = state.alternatives
 			state.alternatives = nil
